@@ -28,6 +28,15 @@ contract Ballot {
 
     Proposal[] public proposals;
 
+    uint startTime = block.timestamp;
+
+    modifier voteEnded {
+        require(
+            block.timestamp - startTime < 5 minutes,
+            "Voting has ended.");
+        _;
+    }
+
     /** 
      * @dev Create a new ballot to choose one of 'proposalNames'.
      * @param proposalNames names of proposals
@@ -97,7 +106,7 @@ contract Ballot {
      * @dev Give your vote (including votes delegated to you) to proposal 'proposals[proposal].name'.
      * @param proposal index of proposal in the proposals array
      */
-    function vote(uint proposal) public {
+    function vote(uint proposal) public voteEnded {
         Voter storage sender = voters[msg.sender];
         require(sender.weight != 0, "Has no right to vote");
         require(!sender.voted, "Already voted.");
