@@ -28,11 +28,15 @@ contract Ballot {
 
     Proposal[] public proposals;
 
-    uint startTime = block.timestamp;
+    uint startTime = block.timestamp; 
+    // startTime takes the timestamp of when the contract was deployed.
 
     modifier voteEnded {
+        /* The voting period should only last 5 minutes; the
+        difference between the Ballot contract timestamp and the vote function
+        when called by a voter should be 5 minutes maximum*/
         require(
-            block.timestamp - startTime < 5 minutes,
+            block.timestamp - startTime <= 5 minutes,
             "Voting has ended.");
         _;
     }
